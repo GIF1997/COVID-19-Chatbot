@@ -26,34 +26,47 @@ cwd = os.getcwd()
 
 pickle_path = cwd + "/chatlogs/"
 
-
 # pickled models
-
 # concern identification models and feature representation
 filename = 'finalized_model.sav'
 filename1 = 'finalized_model_agreement.sav'
 filename2 = "transformer.sav"
 filename3 = "transformer_agreement.sav"
-
 # question identification model
 filename4 = 'finalized_model_q.sav'
 filename5 = "transformer_q.sav"
-
 # answer identification model
 filename6 = 'question_model.sav'
+                       
+                        
+try:
+    # load the model from disk
+    concern_model = pickle.load(open(filename, 'rb'))
+    concern_model_agreement = pickle.load(open(filename1, 'rb'))
+    transformer = pickle.load(open(filename2, 'rb'))
+    transformer_agreement = pickle.load(open(filename3, 'rb'))
+    answer_model = pickle.load(open(filename4, 'rb'))
+    answer_token = pickle.load(open(filename5, 'rb'))
 
 
+except:
+    #download models from google drive
+    pip install gdown
+    gdown https://drive.google.com/uc?id=1aPDfqR_siXbaeJlWA_bEgq83tnlywoDc
+    gdown https://drive.google.com/uc?id=1CUHKIV-wz0_YLDt3XSXkCe93nLa56xRH
+    gdown https://drive.google.com/uc?id=1rIVycihBjaTSI1GqqTG5-3pKuc5QD5Fm
+    gdown https://drive.google.com/uc?id=1cik-I0u5Hi1n-QJcHhmz04s-z46yKrmF
+    gdown https://drive.google.com/uc?id=1ePDQU6ptb-oLrjjBCUilxMAIgHHqj3tE
+    gdown https://drive.google.com/uc?id=1mOR_c9DAXavs6CVpAtXLLNd-hCpqHxpb
+    gdown https://drive.google.com/uc?id=1Q3t_0VmX39iXvU5hsYBpIdm0VaHq0omY
 
-# load the model from disk
-concern_model = pickle.load(open(filename, 'rb'))
-concern_model_agreement = pickle.load(open(filename1, 'rb'))
-transformer = pickle.load(open(filename2, 'rb'))
-transformer_agreement = pickle.load(open(filename3, 'rb'))
-answer_model = pickle.load(open(filename4, 'rb'))
-answer_token = pickle.load(open(filename5, 'rb'))
-
-
-
+    # load the model from disk
+    concern_model = pickle.load(open(filename, 'rb'))
+    concern_model_agreement = pickle.load(open(filename1, 'rb'))
+    transformer = pickle.load(open(filename2, 'rb'))
+    transformer_agreement = pickle.load(open(filename3, 'rb'))
+    answer_model = pickle.load(open(filename4, 'rb'))
+    answer_token = pickle.load(open(filename5, 'rb'))
 
 stop_words_file = 'SmartStoplist.txt'
 
