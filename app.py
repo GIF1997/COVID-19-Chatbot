@@ -21,6 +21,7 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 import torch
 import language_tool_python
 from string import punctuation
+import gdown
 
 cwd = os.getcwd()
 
@@ -38,7 +39,13 @@ filename5 = "transformer_q.sav"
 # answer identification model
 filename6 = 'question_model.sav'
                        
-                        
+# unpickle BERT model for machines without GPU    
+class CPU_Unpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'torch.storage' and name == '_load_from_bytes':
+            return lambda b: torch.load(io.BytesIO(b), map_location='cpu')
+        else: return super().find_class(module, name)
+        
 try:
     # load the model from disk
     concern_model = pickle.load(open(filename, 'rb'))
@@ -47,26 +54,48 @@ try:
     transformer_agreement = pickle.load(open(filename3, 'rb'))
     answer_model = pickle.load(open(filename4, 'rb'))
     answer_token = pickle.load(open(filename5, 'rb'))
+    bert_classifier = CPU_Unpickler(open(filename6, 'rb')).load() 
 
 
 except:
     #download models from google drive
-    pip install gdown
-    gdown https://drive.google.com/uc?id=1aPDfqR_siXbaeJlWA_bEgq83tnlywoDc
-    gdown https://drive.google.com/uc?id=1CUHKIV-wz0_YLDt3XSXkCe93nLa56xRH
-    gdown https://drive.google.com/uc?id=1rIVycihBjaTSI1GqqTG5-3pKuc5QD5Fm
-    gdown https://drive.google.com/uc?id=1cik-I0u5Hi1n-QJcHhmz04s-z46yKrmF
-    gdown https://drive.google.com/uc?id=1ePDQU6ptb-oLrjjBCUilxMAIgHHqj3tE
-    gdown https://drive.google.com/uc?id=1mOR_c9DAXavs6CVpAtXLLNd-hCpqHxpb
-    gdown https://drive.google.com/uc?id=1Q3t_0VmX39iXvU5hsYBpIdm0VaHq0omY
+    url = 'https://drive.google.com/uc?id=1CUHKIV-wz0_YLDt3XSXkCe93nLa56xRH'
+    output = filename
+    gdown.download(url, output, quiet=False)
 
+    url1 = 'https://drive.google.com/uc?id=1rIVycihBjaTSI1GqqTG5-3pKuc5QD5Fm'
+    output1 = filename1
+    gdown.download(url1, output1, quiet=False)
+
+    url2 = 'https://drive.google.com/uc?id=1Q3t_0VmX39iXvU5hsYBpIdm0VaHq0omY'
+    output2 = filename2
+    gdown.download(url2, output2, quiet=False)
+
+    url3 = 'https://drive.google.com/uc?id=1ePDQU6ptb-oLrjjBCUilxMAIgHHqj3tE'
+    output3 = filename3
+    gdown.download(url3, output3, quiet=False)
+    
+    url4 = 'https://drive.google.com/uc?id=1aPDfqR_siXbaeJlWA_bEgq83tnlywoDc'
+    output4 = filename4
+    gdown.download(url4, output4, quiet=False)
+
+    url5 = 'https://drive.google.com/uc?id=1mOR_c9DAXavs6CVpAtXLLNd-hCpqHxpb'
+    output5 = filename5
+    gdown.download(url5, output5, quiet=False)    
+
+    url6 = 'https://drive.google.com/uc?id=1cik-I0u5Hi1n-QJcHhmz04s-z46yKrmF'
+    output6 = filename6
+    gdown.download(url6, output6, quiet=False)    
+
+    
     # load the model from disk
     concern_model = pickle.load(open(filename, 'rb'))
-    concern_model_agreement = pickle.load(open(filename1, 'rb'))
+    concern_model_agreement = pickle.load(open(filename1, 'rb'))    
     transformer = pickle.load(open(filename2, 'rb'))
     transformer_agreement = pickle.load(open(filename3, 'rb'))
     answer_model = pickle.load(open(filename4, 'rb'))
     answer_token = pickle.load(open(filename5, 'rb'))
+    bert_classifier = CPU_Unpickler(open(filename6, 'rb')).load()    
 
 stop_words_file = 'SmartStoplist.txt'
 
@@ -88,15 +117,8 @@ with open('q_concern_dic.pickle', 'rb') as handle:
 with open('q_id_dic.pickle', 'rb') as handle:
     q_id_dic = pickle.load(handle)
     
-# unpickle BERT model for machines without GPU    
-class CPU_Unpickler(pickle.Unpickler):
-    def find_class(self, module, name):
-        if module == 'torch.storage' and name == '_load_from_bytes':
-            return lambda b: torch.load(io.BytesIO(b), map_location='cpu')
-        else: return super().find_class(module, name)
 
-# BERT question sentence classifier        
-bert_classifier = CPU_Unpickler(open(filename6, 'rb')).load()    
+
     
 
     
@@ -578,3 +600,4 @@ def get_bot_response():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
